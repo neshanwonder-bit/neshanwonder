@@ -46,6 +46,10 @@ When you add a field: update the JSON Schema **and** the Zod schema in `lib/sche
 **Coverage-first code review (then filter):**
 > Report every issue you find, including low-confidence or low-severity ones, each tagged with confidence and severity. Don't self-filter for importance — a later pass will rank them.
 
+## Measure before you ship a prompt change
+
+Don't eyeball prompt tweaks — run them. With the dev server up (`npm run dev`), `npm run eval -- ./some-garment.jpg` sends sample inputs through the real `tag-item` and `suggest-outfit` routes and prints what comes back. Change a prompt, re-run, compare. The outfit check runs against a built-in sample wardrobe with no image needed. See `scripts/eval-prompts.mjs`.
+
 ## How to grow this file
 
 When a prompt gets you a great result, paste the version that worked here with a one-line note on why. Over time this becomes *your* playbook — the thing that reproduces your best results regardless of which model is serving them.

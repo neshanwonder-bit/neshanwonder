@@ -22,9 +22,10 @@ cp .env.example .env.local   # paste ANTHROPIC_API_KEY
 npm run dev                  # http://localhost:3000
 npm run build                # production build — run before declaring a change done
 npm run lint                 # next lint
+npm run eval -- ./img.jpg    # prompt eval harness (needs `npm run dev` running); see scripts/eval-prompts.mjs
 ```
 
-There is no test suite yet. Verify changes with `npm run build` and by exercising the flow in the browser.
+There is no unit-test suite yet. Verify changes with `npm run build`, the `npm run eval` harness (exercises the AI routes against sample inputs), and by exercising the flow in the browser.
 
 ## Architecture
 
@@ -48,8 +49,9 @@ lib/
 
 ## Conventions that matter here
 
-- **`lib/schema.ts` is the source of truth.** Categories, patterns, fits, seasons, availability, and the `ClosetItem`/`Tags`/`Outfit` shapes all live here. Change types here first, then let the type errors guide the rest.
-- **Two schemas per model call, kept in sync by hand.** Each API route defines a plain **JSON Schema** (for the SDK's `output_config.format`) *and* re-parses the result with the **Zod** schema from `lib/schema.ts`. If you add or rename a field, update **both** or validation will reject good responses. Consider deriving one from the other if you touch this area.
+- **`lib/schema.ts` is the source of truth.** Categories, patterns, fits, seasons, availability, the `ClosetItem`/`Tags`/`Outfit` shapes, **and** the API-facing JSON Schemas (`TAGS_JSON_SCHEMA`, `OUTFIT_JSON_SCHEMA`) all live here. Change types here first, then let the type errors guide the rest.
+- **Two schemas per model call — now compiler-guarded.** Each model call needs a plain **JSON Schema** (for the SDK's `output_config.format`) *and* a **Zod** schema (to re-validate the result). Both live in `lib/schema.ts`, side by side, with `ExactKeys<...>` compile-time assertions: if the JSON Schema's field set drifts from the Zod type, `tsc`/`next build` fails. So you still update both when adding a field, but forgetting is now a build error, not a silent runtime rejection.
+- **Do NOT replace the hand-written JSON Schemas with the SDK's `zodOutputFormat`.** It was tried and rejected: with this Zod build it downgrades `enum` fields to plain `string` (dropping server-side enforcement) and overwrites the field descriptions with stringified constraint blobs. The hand-written schemas keep enforced enums and model-guiding descriptions — keep them.
 - **Never trust model output.** Both routes re-validate with Zod and return `502` with the raw text on failure. `suggest-outfit` additionally filters returned `item_ids` down to ids that actually exist in the submitted wardrobe. Preserve that guard — it's what stops the model from inventing items.
 - **`db.ts` is client-only** (`"use client"`). Don't import it into an API route or server component.
 - **Secrets stay server-side.** `ANTHROPIC_API_KEY` is read by `new Anthropic()` inside routes only. Never expose it to the client or log it. `.env.local` is gitignored — keep it that way.
