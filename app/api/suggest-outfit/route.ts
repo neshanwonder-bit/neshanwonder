@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
-import { OutfitSchema, SEASONS } from "@/lib/schema";
+import { OUTFIT_JSON_SCHEMA, OutfitSchema, SEASONS } from "@/lib/schema";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -25,26 +25,6 @@ const BodySchema = z.object({
   season: z.enum(SEASONS),
   items: z.array(ItemSummarySchema).min(2),
 });
-
-const OUTFIT_JSON_SCHEMA = {
-  type: "object",
-  properties: {
-    outfits: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          item_ids: { type: "array", items: { type: "string" } },
-          rationale: { type: "string" },
-        },
-        required: ["item_ids", "rationale"],
-        additionalProperties: false,
-      },
-    },
-  },
-  required: ["outfits"],
-  additionalProperties: false,
-} as const;
 
 export async function POST(req: Request) {
   let body;
@@ -75,7 +55,7 @@ Pick 3 distinct outfits from THIS wardrobe only. Each outfit must:
 Return JSON only.`;
 
   const response = await client.messages.create({
-    model: "claude-opus-4-7",
+    model: "claude-opus-4-8",
     max_tokens: 2048,
     output_config: {
       format: { type: "json_schema", schema: OUTFIT_JSON_SCHEMA as Record<string, unknown> },
