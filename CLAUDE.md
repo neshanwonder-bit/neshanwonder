@@ -57,7 +57,7 @@ lib/
 
 ## Model versions
 
-The API routes currently pin **`claude-opus-4-7`**. The current generation is **Opus 4.8** (`claude-opus-4-8`) and the **Claude 5 family** (e.g. `claude-sonnet-5` for cheaper high-volume calls). When updating models:
+The API routes pin **`claude-opus-4-8`** (the current Opus generation). The broader current lineup also includes the **Claude 5 family** (e.g. `claude-sonnet-5` for cheaper high-volume calls, `claude-fable-5` for the hardest reasoning). When updating models:
 
 - Vision tagging (`tag-item`) and outfit reasoning (`suggest-outfit`) both benefit from a strong model, but tagging is high-volume — a smaller/faster model there can cut cost with little quality loss.
 - Both routes already use structured output via `output_config.format` with a `json_schema`. Keep that pattern; it's the reliable way to get parseable results.

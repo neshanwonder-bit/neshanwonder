@@ -75,7 +75,7 @@ Pick 3 distinct outfits from THIS wardrobe only. Each outfit must:
 Return JSON only.`;
 
   const response = await client.messages.create({
-    model: "claude-opus-4-7",
+    model: "claude-opus-4-8",
     max_tokens: 2048,
     output_config: {
       format: { type: "json_schema", schema: OUTFIT_JSON_SCHEMA as Record<string, unknown> },

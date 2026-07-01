@@ -30,7 +30,7 @@ Open `http://localhost:3000` on your phone (same Wi-Fi) or laptop.
 ## Stack
 
 - Next.js 14 (App Router) + TypeScript + Tailwind
-- `@anthropic-ai/sdk` — Claude Opus 4.7 for both vision tagging and outfit suggestions
+- `@anthropic-ai/sdk` — Claude Opus 4.8 for both vision tagging and outfit suggestions
 - `idb` — IndexedDB wrapper for on-device storage
 - Zod for runtime validation
 

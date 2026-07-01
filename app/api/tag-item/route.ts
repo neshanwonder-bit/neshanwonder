@@ -49,7 +49,7 @@ export async function POST(req: Request) {
   }
 
   const response = await client.messages.create({
-    model: "claude-opus-4-7",
+    model: "claude-opus-4-8",
     max_tokens: 1024,
     output_config: {
       format: { type: "json_schema", schema: TAGS_JSON_SCHEMA as Record<string, unknown> },
