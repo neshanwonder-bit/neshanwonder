@@ -65,6 +65,7 @@ export default function HomePage() {
       <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-ink/10 bg-cream/95 backdrop-blur">
         <div className="mx-auto flex max-w-md items-center justify-around px-4 py-3">
           <NavLink href="/">Closet</NavLink>
+          <NavLink href="/insights">Insights</NavLink>
           <Link
             href="/add"
             className="rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream shadow-lg"
